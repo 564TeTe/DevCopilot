@@ -1,0 +1,55 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: devcopilot-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: devcopilot
+      MYSQL_USER: devcopilot
+      MYSQL_PASSWORD: devcopilot
+    ports:
+      - "13306:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  postgres-vector:
+    image: pgvector/pgvector:pg16
+    container_name: devcopilot-postgres-vector
+    environment:
+      POSTGRES_DB: devcopilot_vector
+      POSTGRES_USER: devcopilot
+      POSTGRES_PASSWORD: devcopilot
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres-vector-data:/var/lib/postgresql/data
+      - ./devcopilot-bootstrap/src/main/resources/sql/postgres-vector-schema.sql:/docker-entrypoint-initdb.d/001-vector-schema.sql:ro
+
+  redis:
+    image: redis:7.4
+    container_name: devcopilot-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: devcopilot-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: devcopilot
+      RABBITMQ_DEFAULT_PASS: devcopilot
+    ports:
+      - "15673:5672"
+      - "15674:15672"
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
+volumes:
+  mysql-data:
+  postgres-vector-data:
+  redis-data:
+  rabbitmq-data:

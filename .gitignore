@@ -1,0 +1,14 @@
+.idea/
+.vscode/
+target/
+node_modules/
+dist/
+*.iml
+*.log
+
+data/
+uploads/
+repos/
+
+.DS_Store
+Thumbs.db
